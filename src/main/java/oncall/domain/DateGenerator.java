@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DateGenerator {
     private static final List<Integer> dayOfMonth = new ArrayList<>(
-            Arrays.asList(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31));
+            Arrays.asList(999, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31));
     private static final List<Date> holidays = new ArrayList<>(
             Arrays.asList(
                     new Date(1, 1, null, true),
@@ -20,7 +20,6 @@ public class DateGenerator {
 
     public static List<Date> generate(int month, String weekString) {
         Week week = Week.findByString(weekString);
-
         // 법정공휴일을 고려해서 일 넣기
         List<Date> dates = new ArrayList<>();
 

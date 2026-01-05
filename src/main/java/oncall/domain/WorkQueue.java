@@ -34,6 +34,10 @@ public class WorkQueue {
         return toRemove;
     }
 
+    public Worker peek() {
+        return workers.get(0);
+    }
+
     public void display() {
         for (Worker worker : workers) {
             System.out.println(worker);

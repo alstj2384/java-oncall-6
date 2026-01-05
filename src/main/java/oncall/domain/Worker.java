@@ -41,8 +41,6 @@ public class Worker {
 
     @Override
     public String toString() {
-        return "Worker{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

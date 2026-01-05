@@ -9,13 +9,34 @@ public class Date {
     private final boolean isWeekend;
 
     public Date(int month, int day, Week week, boolean isWeekend) {
+        validateMonth(month);
         this.month = month;
         this.day = day;
         this.week = week;
         this.isWeekend = isWeekend;
     }
 
-    // TODO 생성자 입력값 검증하기
+    private void validateMonth(int month) {
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.");
+        }
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public Week getWeek() {
+        return week;
+    }
+
+    public boolean isWeekend() {
+        return isWeekend;
+    }
 
     public boolean isHoliday() {
         return isWeekend || week.isWeekend();

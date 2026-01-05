@@ -4,6 +4,7 @@ import java.util.List;
 import oncall.domain.Date;
 import oncall.domain.DateGenerator;
 import oncall.domain.WorkQueue;
+import oncall.dto.Schedule;
 import oncall.dto.WorkQueues;
 import oncall.service.ScheduleService;
 import oncall.util.Parser;
@@ -24,13 +25,14 @@ public class ScheduleController {
 
     public void run() {
         List<Date> dates = generateDates();
-        for (Date date : dates) {
-            System.out.println(date);
-        }
 
         WorkQueues workQueues = saveWorkers();
         workQueues.getWeekWorkQueue().display();
         workQueues.getWeekendWorkQueue().display();
+
+        List<Schedule> schedules = scheduleService.makeSchedule(dates, workQueues);
+
+        outputView.printSchedule(schedules);
     }
 
     private WorkQueues saveWorkers() {
