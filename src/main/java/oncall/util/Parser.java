@@ -10,11 +10,11 @@ public class Parser {
         try {
             int parsed = Integer.parseInt(value);
             if (parsed < 0) {
-                throw new IllegalArgumentException("[ERROR] 숫자는 양수여야 합니다.");
+                throw new IllegalArgumentException("[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.");
             }
             return parsed;
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 숫자 형식이 아닙니다.");
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.");
         }
     }
 
