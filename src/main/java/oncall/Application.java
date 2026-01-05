@@ -1,7 +1,15 @@
 package oncall;
 
+import java.util.List;
+import oncall.domain.Date;
+import oncall.domain.DateGenerator;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        List<Date> generate = DateGenerator.generate(4, "토");
+
+        for (Date date : generate) {
+            System.out.println(date);
+        }
     }
 }
