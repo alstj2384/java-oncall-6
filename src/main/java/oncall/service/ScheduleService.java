@@ -3,6 +3,7 @@ package oncall.service;
 import java.util.ArrayList;
 import java.util.List;
 import oncall.domain.Date;
+import oncall.domain.WeekType;
 import oncall.domain.WorkQueue;
 import oncall.domain.Worker;
 import oncall.dto.Schedule;
@@ -16,10 +17,12 @@ public class ScheduleService {
         this.workerRepository = workerRepository;
     }
 
-    public void save(List<String> workers) {
-        for (String worker : workers) {
-            workerRepository.add(new Worker(worker));
-        }
+    public void save(WorkQueues workQueues) {
+        WorkQueue weekendWorkQueue = workQueues.getWeekendWorkQueue();
+        WorkQueue weekWorkQueue = workQueues.getWeekWorkQueue();
+
+        workerRepository.add(WeekType.WEEKDAY, weekWorkQueue);
+        workerRepository.add(WeekType.WEEKEND, weekendWorkQueue);
     }
 
     public List<Schedule> makeSchedule(List<Date> dates, WorkQueues workQueues) {
@@ -52,10 +55,6 @@ public class ScheduleService {
             }
             scheduleIndex++;
         }
-        // 2. 주말이면, 주말 근무자 peek
-        // 2-1 앞 근무자와 겹치면, 주말 근무 큐 swap
-        // 3. 평일이면, 평일 근무자 peek
-        // 3-1 앞 근무자와 겹치면, 평일 근무 큐 swap
         return schedules;
     }
 }

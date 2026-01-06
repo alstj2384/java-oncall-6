@@ -30,6 +30,8 @@ public class ScheduleController {
         workQueues.getWeekWorkQueue().display();
         workQueues.getWeekendWorkQueue().display();
 
+        scheduleService.save(workQueues);
+
         List<Schedule> schedules = scheduleService.makeSchedule(dates, workQueues);
 
         outputView.printSchedule(schedules);
