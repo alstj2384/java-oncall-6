@@ -20,22 +20,26 @@ public class DateGenerator {
 
     public static List<Date> generate(int month, String weekString) {
         Week week = Week.findByString(weekString);
-        // 법정공휴일을 고려해서 일 넣기
         List<Date> dates = new ArrayList<>();
 
         for (int i = 1; i <= dayOfMonth.get(month); i++) {
-            Date date = new Date(month, i, null, false);
-            boolean isHoliday = false;
-            for (Date holiday : holidays) {
-                if (date.equals(holiday)) {
-                    isHoliday = true;
-                    break;
-                }
-            }
-            dates.add(new Date(month, i, week, isHoliday));
+            dates.add(new Date(month, i, week, isHoliday(month, i)));
             week = week.next();
         }
         return dates;
     }
+
+    private static boolean isHoliday(int month, int day) {
+        Date date = new Date(month, day, null, false);
+        ;
+
+        for (Date holiday : holidays) {
+            if (date.equals(holiday)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

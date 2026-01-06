@@ -2,7 +2,7 @@ package oncall.view;
 
 import java.util.List;
 import oncall.domain.Date;
-import oncall.dto.Schedule;
+import oncall.domain.Schedule;
 
 public class OutputView {
     public void printException(String message) {

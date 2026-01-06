@@ -3,8 +3,8 @@ package oncall;
 import java.util.List;
 import oncall.domain.Date;
 import oncall.domain.DateGenerator;
+import oncall.domain.Schedule;
 import oncall.domain.WorkQueue;
-import oncall.dto.Schedule;
 import oncall.dto.WorkQueues;
 import oncall.service.ScheduleService;
 import oncall.util.Parser;
@@ -27,12 +27,11 @@ public class ScheduleController {
         List<Date> dates = generateDates();
 
         WorkQueues workQueues = saveWorkers();
-        workQueues.getWeekWorkQueue().display();
-        workQueues.getWeekendWorkQueue().display();
 
         scheduleService.save(workQueues);
 
-        List<Schedule> schedules = scheduleService.makeSchedule(dates, workQueues);
+        scheduleService.makeSchedule(dates);
+        List<Schedule> schedules = scheduleService.getSchedules();
 
         outputView.printSchedule(schedules);
     }
@@ -65,17 +64,4 @@ public class ScheduleController {
             }
         }
     }
-
-    /* 재입력 로직 템플릿 */
-//    private 리턴값 메서드이름() {
-//        while (true) {
-//            try {
-//                동작
-//
-//                return ;
-//            } catch (IllegalArgumentException e) {
-//                outputView.printException(e.getMessage());
-//            }
-//        }
-//    }
 }

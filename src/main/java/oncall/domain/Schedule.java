@@ -1,7 +1,4 @@
-package oncall.dto;
-
-import oncall.domain.Date;
-import oncall.domain.Worker;
+package oncall.domain;
 
 public class Schedule {
     private final Date date;

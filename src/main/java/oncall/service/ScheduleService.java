@@ -1,20 +1,23 @@
 package oncall.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import oncall.domain.Date;
+import oncall.domain.Schedule;
 import oncall.domain.WeekType;
 import oncall.domain.WorkQueue;
 import oncall.domain.Worker;
-import oncall.dto.Schedule;
 import oncall.dto.WorkQueues;
+import oncall.repository.ScheduleRepository;
 import oncall.repository.WorkerRepository;
 
 public class ScheduleService {
     private final WorkerRepository workerRepository;
+    private final ScheduleRepository scheduleRepository;
 
-    public ScheduleService(WorkerRepository workerRepository) {
+    public ScheduleService(WorkerRepository workerRepository, ScheduleRepository scheduleRepository) {
         this.workerRepository = workerRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     public void save(WorkQueues workQueues) {
@@ -25,36 +28,39 @@ public class ScheduleService {
         workerRepository.add(WeekType.WEEKEND, weekendWorkQueue);
     }
 
-    public List<Schedule> makeSchedule(List<Date> dates, WorkQueues workQueues) {
-        List<Schedule> schedules = new ArrayList<>();
-        WorkQueue weekWorkQueue = workQueues.getWeekWorkQueue();
-        WorkQueue weekendWorkQueue = workQueues.getWeekendWorkQueue();
+    public List<Schedule> getSchedules() {
+        return scheduleRepository.getAll();
+    }
 
-        int scheduleIndex = -1;
+    public void makeSchedule(List<Date> dates) {
         for (Date date : dates) {
-            if (date.isHoliday()) {
-                Worker peek = weekendWorkQueue.peek();
-                // 이전 근무자와 같은 경우를 확인
-                if (schedules.size() != 0) {
-                    Schedule schedule = schedules.get(scheduleIndex);
-                    if (peek.equals(schedule.getWorker())) {
-                        weekendWorkQueue.swap();
-                    }
-                }
-                schedules.add(new Schedule(date, weekendWorkQueue.poll()));
-            } else {
-                Worker peek = weekWorkQueue.peek();
-                // 이전 근무자와 같은 경우를 확인
-                if (schedules.size() != 0) {
-                    Schedule schedule = schedules.get(scheduleIndex);
-                    if (peek.equals(schedule.getWorker())) {
-                        weekWorkQueue.swap();
-                    }
-                }
-                schedules.add(new Schedule(date, weekWorkQueue.poll()));
-            }
-            scheduleIndex++;
+            putScheduleByWeekType(date);
         }
-        return schedules;
+    }
+
+    private void putScheduleByWeekType(Date date) {
+        if (date.isHoliday()) {
+            putSchedule(date, WeekType.WEEKEND);
+            return;
+        }
+        putSchedule(date, WeekType.WEEKDAY);
+    }
+
+    private void putSchedule(Date date, WeekType weekType) {
+        WorkQueue workQueue = workerRepository.get(weekType);
+        swapIfDuplicated(workQueue);
+        scheduleRepository.add(new Schedule(date, workQueue.poll()));
+    }
+
+    private void swapIfDuplicated(WorkQueue workQueue) {
+        Optional<Schedule> optionalSchedule = scheduleRepository.peek();
+        Worker peek = workQueue.peek();
+        if (optionalSchedule.isEmpty()) {
+            return;
+        }
+        Schedule schedule = optionalSchedule.get();
+        if (peek.equals(schedule.getWorker())) {
+            workQueue.swap();
+        }
     }
 }

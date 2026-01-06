@@ -24,7 +24,6 @@ public class WorkQueue {
         workers = new ArrayList<>();
     }
 
-    // TODO 개수 검증 (5명인가? 35명 미만인가?, 중복검증)
     public void validate(List<Worker> workers) {
         validateIsUnique(workers);
         validateSize(workers);

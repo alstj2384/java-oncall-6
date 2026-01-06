@@ -23,6 +23,10 @@ public class WorkerRepository {
         store.put(weekType, workQueue);
     }
 
+    public WorkQueue get(WeekType weekType) {
+        return store.get(weekType);
+    }
+
 
     public void deleteAll() {
         store.clear();
